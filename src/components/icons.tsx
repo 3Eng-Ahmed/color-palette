@@ -64,3 +64,20 @@ export const MoonIcon = ({ className }: IconProps) => (
     <path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" />
   </svg>
 )
+export const BookmarkIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M6 4h12v17l-6-4-6 4z" />
+  </svg>
+)
+
+export const TrashIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" />
+  </svg>
+)
+
+export const CloseIcon = ({ className }: IconProps) => (
+  <svg {...base} className={className}>
+    <path d="M6 6l12 12M18 6L6 18" />
+  </svg>
+)
