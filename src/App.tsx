@@ -1,122 +1,50 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useCallback } from 'react'
+import { GenerateButton } from './components/GenerateButton'
+import { Header } from './components/Header'
+import { Palette } from './components/Palette'
+import { useKeyboardShortcut } from './hooks/useKeyboardShortcut'
+import { useLocalStorage } from './hooks/useLocalStorage'
+import { usePalette } from './hooks/usePalette'
+import { useTheme } from './hooks/useTheme'
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const { theme, toggleTheme } = useTheme()
+  const { palette, generate, toggleLock, setColorHex } = usePalette()
+  const [favorites, setFavorites] = useLocalStorage<string[]>('palette:favorites', [])
+
+  const toggleFavorite = useCallback(
+    (hex: string) => {
+      setFavorites(prev =>
+        prev.includes(hex) ? prev.filter(h => h !== hex) : [...prev, hex]
+      )
+    },
+    [setFavorites]
+  )
+
+  useKeyboardShortcut(' ', generate)
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
+    <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+      <Header theme={theme} onToggleTheme={toggleTheme} />
+      <main className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6">
+        <Palette
+          colors={palette}
+          favorites={favorites}
+          onToggleLock={toggleLock}
+          onEditHex={setColorHex}
+          onToggleFavorite={toggleFavorite}
+        />
+        <div className="flex flex-wrap items-center gap-4">
+          <GenerateButton onGenerate={generate} />
+          <p className="hidden text-sm text-zinc-500 sm:block dark:text-zinc-400">
+            Press{' '}
+            <kbd className="rounded border border-zinc-300 px-1.5 py-0.5 font-mono text-xs dark:border-zinc-700">
+              Space
+            </kbd>{' '}
+            to generate
           </p>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      </main>
+    </div>
   )
 }
-
-export default App
