@@ -6,7 +6,7 @@ interface HeaderProps {
   onToggleTheme: () => void
 }
 
-const LOGO_COLORS = ['#F97316', '#EAB308', '#22C55E', '#3B82F6', '#A855F7']
+const LOGO_COLORS = ['#FF0000', '#00FF00', '#0000FF']
 
 export function Header({ theme, onToggleTheme }: HeaderProps) {
   return (
